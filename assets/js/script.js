@@ -1,27 +1,64 @@
-// TODO: Declare any global variables we need
+// Declare any global variables we need
+let headFlipCount = 0;
+let tailFlipCount = 0;
 
+let counts = {
+  heads: 0,
+  tails: 0
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-    // This is just a sanity check to make sure your JavaScript script is getting loaded
-    // You can remove it once you see it in your browser console in the developer tools
-    console.log('Hi')
+// Flip Button Click Handler
+document.addEventListener("DOMContentLoaded", function () {
+function handleFlipResult(result) {
+  // result = "heads" || "tails"
 
-    // TODO: Add event listener and handler for flip and clear buttons
+  counts[result]++ // result = "heads" ==> counts["heads"] == counts.heads
 
-    // Flip Button Click Handler
-        // TODO: Determine flip outcome
-        // TODO: Update image and status message in the DOM
+  let img = document.querySelector('img')
+  img.src = `./assets/images/penny-${result}.jpg`
+  img.alt = `${result} face of a penny`
 
-        // Update the scorboard
-        // TODO: Calculate the total number of rolls/flips
-        // Make variables to track the percentages of heads and tails
-        // TODO: Use the calculated total to calculate the percentages
-        // HINT: Make sure not to divide by 0! (if total is 0, percent will be 0 as well)
-        // TODO: Update the display of each table cell
+  // TODO: capitalize the result in the message
+  document.querySelector('.message-container h3').textContent = `You flipped ${result}!`
 
+  //update scoreboard
+  document.querySelector(`#${result}`).textContent = counts[result]
+  let headsPercent = Math.round(counts.heads/ (counts.heads+counts.tails) * 100)
+  let tailsPercent = Math.round(counts.tails/ (counts.heads+counts.tails) * 100)
+  document.querySelector('#heads-percent').textContent = headsPercent + `%`
+  document.querySelector('#tails-percent').textContent = tailsPercent + `%`
+}
 
-    // Clear Button Click Handler
-        // TODO: Reset global variables to 0
-        // TODO: Update the scoreboard (same logic as in flip button click handler)
+  function handleFlip(e) {
+    console.log("Flipping out");
+    let isHeads = Math.random() >= 0.5;
 
-})
+    if (isHeads) {
+     handleFlipResult('heads')
+    } else {
+      handleFlipResult('tails')
+    }
+  }
+
+ // Clear Button Click Handler
+  function handleClear(e) {
+    console.log("Clear it out");
+
+    // Reset global variables to 0
+    counts.heads = counts.tails = 0
+
+    // Update the scoreboard (same logic as in flip button click handler)
+    //access all DOM elements and set back to 0
+    document.querySelector('#heads').textContent = 0
+    document.querySelector('#tails').textContent = 0
+    document.querySelector('#heads-percent').textContent = '0%'
+    document.querySelector('#tails-percent').textContent = '0%'
+
+    document.querySelector('.message-container h3').textContent = 'Let\'s Get Rolling!'
+
+  }
+
+  // Add event listener and handler for flip and clear buttons
+  document.querySelector("#flip").addEventListener("click", handleFlip);
+  document.querySelector("#clear").addEventListener("click", handleClear);
+});
